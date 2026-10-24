@@ -1,0 +1,434 @@
+-- 1. Load Fluent Library & Addons with Fallback
+local Fluent, SaveManager, InterfaceManager
+
+local FluentURLs = {
+    "https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua",
+    "https://raw.githubusercontent.com/dawid-scripts/Fluent/main/main.lua",
+    "https://pastebin.com/raw/FluentLibrary"
+}
+
+for _, url in ipairs(FluentURLs) do
+    local success, result = pcall(function()
+        return loadstring(game:HttpGet(url))()
+    end)
+    if success and result then
+        Fluent = result
+        break
+    end
+end
+
+if not Fluent then
+    local success, result = pcall(function()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/main/main.lua"))()
+    end)
+    if success and result then
+        Fluent = result
+    end
+end
+
+if Fluent then
+    local success2, result2 = pcall(function()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+    end)
+    if success2 then SaveManager = result2 end
+    
+    local success3, result3 = pcall(function()
+        return loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+    end)
+    if success3 then InterfaceManager = result3 end
+end
+
+----------------------------------------------------------------------
+-- PRE-LOADER / LOADING SCREEN - NEON PURPLE EDITION
+----------------------------------------------------------------------
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local player = Players.LocalPlayer
+
+-- Warna Neon Purple
+local NeonPurple = Color3.fromRGB(170, 0, 255)
+local NeonPurpleDark = Color3.fromRGB(110, 0, 180)
+local NeonPurpleLight = Color3.fromRGB(220, 130, 255)
+local DarkBg = Color3.fromRGB(10, 6, 18)
+local DarkCard = Color3.fromRGB(18, 12, 30)
+
+local LoadingGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local UIGradient = Instance.new("UIGradient")
+local TitleLabel = Instance.new("TextLabel")
+local SubTitleLabel = Instance.new("TextLabel")
+local StatusLabel = Instance.new("TextLabel")
+local BarBackground = Instance.new("Frame")
+local BarBackgroundCorner = Instance.new("UICorner")
+local ProgressBar = Instance.new("Frame")
+local ProgressBarCorner = Instance.new("UICorner")
+local ProgressGlow = Instance.new("Frame")
+local PercentageLabel = Instance.new("TextLabel")
+local LoadingIcon = Instance.new("TextLabel")
+
+LoadingGui.Name = "MM2KingPreloader"
+LoadingGui.Parent = (CoreGui:FindFirstChild("RobloxGui") or player:WaitForChild("PlayerGui"))
+LoadingGui.ResetOnSpawn = false
+
+-- Main Frame
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = LoadingGui
+MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MainFrame.BackgroundColor3 = DarkBg
+MainFrame.BackgroundTransparency = 0.05
+MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+MainFrame.Size = UDim2.new(0, 400, 0, 220)
+
+UICorner.CornerRadius = UDim.new(0, 16)
+UICorner.Parent = MainFrame
+
+-- Border Glow (Neon Purple)
+local BorderStroke = Instance.new("UIStroke")
+BorderStroke.Color = NeonPurple
+BorderStroke.Thickness = 2
+BorderStroke.Transparency = 0.2
+BorderStroke.Parent = MainFrame
+
+local BorderGradient = Instance.new("UIGradient")
+BorderGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, NeonPurple),
+    ColorSequenceKeypoint.new(0.5, NeonPurpleLight),
+    ColorSequenceKeypoint.new(1, NeonPurple)
+})
+BorderGradient.Parent = BorderStroke
+
+-- Background Gradient
+local BgGradient = Instance.new("UIGradient")
+BgGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(12, 6, 22)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(25, 10, 45)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(12, 6, 22))
+})
+BgGradient.Rotation = 45
+BgGradient.Parent = MainFrame
+
+-- Loading Icon (Spinning Crown)
+LoadingIcon.Parent = MainFrame
+LoadingIcon.BackgroundTransparency = 1
+LoadingIcon.Position = UDim2.new(0.5, -25, 0, 20)
+LoadingIcon.Size = UDim2.new(0, 50, 0, 50)
+LoadingIcon.Font = Enum.Font.GothamBlack
+LoadingIcon.Text = "👑"
+LoadingIcon.TextColor3 = NeonPurple
+LoadingIcon.TextSize = 40
+LoadingIcon.TextScaled = true
+
+-- Title
+TitleLabel.Parent = MainFrame
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Position = UDim2.new(0, 0, 0, 78)
+TitleLabel.Size = UDim2.new(1, 0, 0, 35)
+TitleLabel.Font = Enum.Font.GothamBlack
+TitleLabel.Text = "MM2 KING LOADER V2"
+TitleLabel.TextColor3 = NeonPurple
+TitleLabel.TextSize = 24
+TitleLabel.TextScaled = true
+
+-- Subtitle
+SubTitleLabel.Parent = MainFrame
+SubTitleLabel.BackgroundTransparency = 1
+SubTitleLabel.Position = UDim2.new(0, 0, 0, 112)
+SubTitleLabel.Size = UDim2.new(1, 0, 0, 18)
+SubTitleLabel.Font = Enum.Font.GothamMedium
+SubTitleLabel.Text = "by MM2 KING Team"
+SubTitleLabel.TextColor3 = Color3.fromRGB(190, 170, 220)
+SubTitleLabel.TextSize = 13
+
+-- Status Label
+StatusLabel.Parent = MainFrame
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Position = UDim2.new(0, 0, 0, 145)
+StatusLabel.Size = UDim2.new(1, 0, 0, 20)
+StatusLabel.Font = Enum.Font.GothamSemibold
+StatusLabel.Text = "Loading Fluent Library..."
+StatusLabel.TextColor3 = Color3.fromRGB(210, 190, 240)
+StatusLabel.TextSize = 13
+
+-- Percentage Label
+PercentageLabel.Parent = MainFrame
+PercentageLabel.BackgroundTransparency = 1
+PercentageLabel.Position = UDim2.new(1, -45, 0, 170)
+PercentageLabel.Size = UDim2.new(0, 40, 0, 20)
+PercentageLabel.Font = Enum.Font.GothamBold
+PercentageLabel.Text = "0%"
+PercentageLabel.TextColor3 = NeonPurple
+PercentageLabel.TextSize = 13
+
+-- Progress Bar Background
+BarBackground.Parent = MainFrame
+BarBackground.BackgroundColor3 = Color3.fromRGB(35, 18, 55)
+BarBackground.Position = UDim2.new(0.08, 0, 0, 175)
+BarBackground.Size = UDim2.new(0.84, 0, 0, 8)
+
+BarBackgroundCorner.CornerRadius = UDim.new(0, 4)
+BarBackgroundCorner.Parent = BarBackground
+
+-- Progress Bar Fill
+ProgressBar.Parent = BarBackground
+ProgressBar.BackgroundColor3 = NeonPurple
+ProgressBar.Size = UDim2.new(0, 0, 1, 0)
+
+ProgressBarCorner.CornerRadius = UDim.new(0, 4)
+ProgressBarCorner.Parent = ProgressBar
+
+local ProgressGradient = Instance.new("UIGradient")
+ProgressGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, NeonPurpleDark),
+    ColorSequenceKeypoint.new(1, NeonPurpleLight)
+})
+ProgressGradient.Parent = ProgressBar
+
+-- Progress Glow Effect
+ProgressGlow.Parent = BarBackground
+ProgressGlow.BackgroundColor3 = NeonPurpleLight
+ProgressGlow.BackgroundTransparency = 0.4
+ProgressGlow.Size = UDim2.new(0, 0, 1, 0)
+ProgressGlow.Position = UDim2.new(0, 0, 0, 0)
+ProgressGlow.Visible = false
+
+-- Animasi Icon Berputar
+task.spawn(function()
+    local rotation = 0
+    while LoadingIcon.Parent do
+        rotation = (rotation + 3) % 360
+        LoadingIcon.Rotation = rotation
+        task.wait(0.02)
+    end
+end)
+
+local function updateProgress(text, progress, percentage)
+    StatusLabel.Text = text
+    if percentage then
+        PercentageLabel.Text = percentage
+    else
+        PercentageLabel.Text = math.floor(progress * 100) .. "%"
+    end
+    
+    TweenService:Create(ProgressBar, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Size = UDim2.new(progress, 0, 1, 0)
+    }):Play()
+    
+    ProgressGlow.Visible = progress > 0.1
+    TweenService:Create(ProgressGlow, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Size = UDim2.new(progress + 0.02, 0, 1, 0)
+    }):Play()
+end
+
+-- Animasi Border Berkedip (Neon Pulse)
+task.spawn(function()
+    while BorderStroke.Parent do
+        for i = 1, 2 do
+            TweenService:Create(BorderStroke, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                Transparency = 0.0
+            }):Play()
+            task.wait(1.5)
+            TweenService:Create(BorderStroke, TweenInfo.new(1.5, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
+                Transparency = 0.35
+            }):Play()
+            task.wait(1.5)
+        end
+    end
+end)
+
+-- Jika Fluent gagal loading, gunakan alternatif Rayfield
+if not Fluent then
+    updateProgress("Loading Rayfield as alternative...", 0.5, "50%")
+    task.wait(0.5)
+    
+    local success, result = pcall(function()
+        return loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+    end)
+    
+    if success and result then
+        updateProgress("Rayfield loaded! Creating UI...", 0.85, "85%")
+        task.wait(0.3)
+        
+        local Rayfield = result
+        local Window = Rayfield:CreateWindow({
+            Name = "MM2 KING LOADER V2",
+            LoadingTitle = "Loading...",
+            LoadingSubtitle = "MM2 KING Loader",
+            ConfigurationSaving = {Enabled = false}
+        })
+        
+        updateProgress("Done!", 1.0, "100%")
+        task.wait(0.5)
+        LoadingGui:Destroy()
+        
+        -- TAB 1: Free Best (Rayfield)
+        local Tab1 = Window:CreateTab("Free Best", 4483362458)
+        Tab1:CreateSection("Free Best Scripts")
+        
+        Tab1:CreateButton({
+            Name = "SP Hub Loader",
+            Callback = function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/as6cd0/SP_Hub/refs/heads/main/Loader"))()
+            end
+        })
+        
+        -- TAB 2: Halloween (Rayfield)
+        local Tab2 = Window:CreateTab("Halloween", 4483362458)
+        Tab2:CreateSection("Halloween Scripts")
+        
+        Tab2:CreateButton({
+            Name = "Autofarm Halloween",
+            Callback = function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/meeqscripts/mm2/refs/heads/main/autofarm"))()
+            end
+        })
+        
+        Tab2:CreateButton({
+            Name = "Auto Farm Candy",
+            Callback = function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/pastefy/MM2AutoFarmCandy/refs/heads/main/lua"))()
+            end
+        })
+        
+        return
+    else
+        updateProgress("Error: Failed to load UI library!", 1.0, "ERROR")
+        task.wait(2)
+        LoadingGui:Destroy()
+        return
+    end
+end
+
+-- Lanjut dengan Fluent jika berhasil loading
+updateProgress("Fluent loaded! Creating UI...", 0.7, "70%")
+task.wait(0.3)
+
+----------------------------------------------------------------------
+-- 2. Create Main Window & 2 New Tabs
+----------------------------------------------------------------------
+local Window = Fluent:CreateWindow({
+    Title = "MM2 KING LOADER V2 NEW",
+    SubTitle = "by MM2 KING Team",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(560, 400),
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl
+})
+
+updateProgress("UI Ready!", 1.0, "100%")
+task.wait(0.3)
+LoadingGui:Destroy()
+
+local Tabs = {
+    FreeBest = Window:AddTab({ Title = "Free Best", Icon = "star" }),
+    Halloween = Window:AddTab({ Title = "Halloween", Icon = "ghost" })
+}
+
+----------------------------------------------------------------------
+-- MOBILE FLOATING TOGGLE BUTTON (LOGO "K")
+----------------------------------------------------------------------
+local ScreenGui = Instance.new("ScreenGui")
+local ToggleButton = Instance.new("TextButton")
+local UICorner = Instance.new("UICorner")
+
+ScreenGui.Name = "MM2KingToggleGui"
+ScreenGui.Parent = (CoreGui:FindFirstChild("RobloxGui") or player:WaitForChild("PlayerGui"))
+ScreenGui.ResetOnSpawn = false
+
+ToggleButton.Name = "ToggleButton"
+ToggleButton.Parent = ScreenGui
+ToggleButton.BackgroundColor3 = Color3.fromRGB(25, 12, 40)
+ToggleButton.Position = UDim2.new(0.05, 0, 0.2, 0)
+ToggleButton.Size = UDim2.new(0, 50, 0, 50)
+ToggleButton.Font = Enum.Font.GothamBlack
+ToggleButton.Text = "K"
+ToggleButton.TextColor3 = NeonPurple
+ToggleButton.TextSize = 28
+ToggleButton.Active = true
+ToggleButton.Draggable = true
+
+UICorner.CornerRadius = UDim.new(0.5, 0)
+UICorner.Parent = ToggleButton
+
+local ToggleStroke = Instance.new("UIStroke")
+ToggleStroke.Color = NeonPurple
+ToggleStroke.Thickness = 1.5
+ToggleStroke.Transparency = 0.3
+ToggleStroke.Parent = ToggleButton
+
+ToggleButton.MouseButton1Click:Connect(function()
+    if Window then
+        Window:Minimize()
+    end
+end)
+
+----------------------------------------------------------------------
+-- TAB 1: FREE BEST
+----------------------------------------------------------------------
+Tabs.FreeBest:AddSection("Free Best Scripts")
+
+Tabs.FreeBest:AddButton({
+    Title = "SP Hub Loader",
+    Description = "Load SP Hub script (best free script)",
+    Callback = function()
+        Fluent:Notify({
+            Title = "MM2 KING Loader",
+            Content = "Executing: SP Hub Loader",
+            Duration = 3
+        })
+        task.spawn(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/as6cd0/SP_Hub/refs/heads/main/Loader"))()
+        end)
+    end
+})
+
+----------------------------------------------------------------------
+-- TAB 2: HALLOWEEN
+----------------------------------------------------------------------
+Tabs.Halloween:AddSection("Halloween Scripts")
+
+Tabs.Halloween:AddButton({
+    Title = "Autofarm Halloween",
+    Description = "Auto farm event Halloween MM2",
+    Callback = function()
+        Fluent:Notify({
+            Title = "MM2 KING Loader",
+            Content = "Executing: Autofarm Halloween",
+            Duration = 3
+        })
+        task.spawn(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/meeqscripts/mm2/refs/heads/main/autofarm"))()
+        end)
+    end
+})
+
+Tabs.Halloween:AddButton({
+    Title = "Auto Farm Candy",
+    Description = "Auto farm candy event Halloween MM2",
+    Callback = function()
+        Fluent:Notify({
+            Title = "MM2 KING Loader",
+            Content = "Executing: Auto Farm Candy",
+            Duration = 3
+        })
+        task.spawn(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/pastefy/MM2AutoFarmCandy/refs/heads/main/lua"))()
+        end)
+    end
+})
+
+----------------------------------------------------------------------
+-- FINAL
+----------------------------------------------------------------------
+Window:SelectTab(1)
+
+Fluent:Notify({
+    Title = "MM2 KING LOADER V2 NEW",
+    Content = "Loader ready! Click 'K' button to toggle UI.",
+    Duration = 5
+})
+
+if SaveManager then
+    SaveManager:LoadAutoloadConfig()
+end
