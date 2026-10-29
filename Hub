@@ -273,6 +273,41 @@ if not Fluent then
             end
         })
         
+        Tab1:CreateButton({
+            Name = "Murder Mystery 2 (xv3gasx)",
+            Callback = function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/xv3gasx/Murder-Mystery-2/refs/heads/main/Release.lua"))()
+            end
+        })
+        
+        Tab1:CreateButton({
+            Name = "Happy Hub",
+            Callback = function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/overthcode2011-stack/HHB/refs/heads/main/MurderMistery.lua"))()
+            end
+        })
+        
+        Tab1:CreateButton({
+            Name = "Spark Hub",
+            Callback = function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/ultimatep568/Spark-Hub/refs/heads/main/SparkHub_Loader.lua"))()
+            end
+        })
+        
+        Tab1:CreateButton({
+            Name = "Pulse Hub",
+            Callback = function()
+                loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/5857a6cfae3b902eb3c2dff7cdbf173b.lua"))()
+            end
+        })
+        
+        Tab1:CreateButton({
+            Name = "Sw1nium Hub",
+            Callback = function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/musha9melnykmuhail-bot/Sw1nium-/refs/heads/main/V1.1"))()
+            end
+        })
+        
         -- TAB 2: Halloween (Rayfield)
         local Tab2 = Window:CreateTab("Halloween", 4483362458)
         Tab2:CreateSection("Halloween Scripts")
@@ -379,6 +414,81 @@ Tabs.FreeBest:AddButton({
         })
         task.spawn(function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/as6cd0/SP_Hub/refs/heads/main/Loader"))()
+        end)
+    end
+})
+
+Tabs.FreeBest:AddButton({
+    Title = "Murder Mystery 2 (xv3gasx)",
+    Description = "Load Murder Mystery 2 script by xv3gasx",
+    Callback = function()
+        Fluent:Notify({
+            Title = "MM2 KING Loader",
+            Content = "Executing: Murder Mystery 2 (xv3gasx)",
+            Duration = 3
+        })
+        task.spawn(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/xv3gasx/Murder-Mystery-2/refs/heads/main/Release.lua"))()
+        end)
+    end
+})
+
+Tabs.FreeBest:AddButton({
+    Title = "Happy Hub",
+    Description = "Load Happy Hub script (MurderMistery)",
+    Callback = function()
+        Fluent:Notify({
+            Title = "MM2 KING Loader",
+            Content = "Executing: Happy Hub",
+            Duration = 3
+        })
+        task.spawn(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/overthcode2011-stack/HHB/refs/heads/main/MurderMistery.lua"))()
+        end)
+    end
+})
+
+Tabs.FreeBest:AddButton({
+    Title = "Spark Hub",
+    Description = "Load Spark Hub script (ultimatep568)",
+    Callback = function()
+        Fluent:Notify({
+            Title = "MM2 KING Loader",
+            Content = "Executing: Spark Hub",
+            Duration = 3
+        })
+        task.spawn(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/ultimatep568/Spark-Hub/refs/heads/main/SparkHub_Loader.lua"))()
+        end)
+    end
+})
+
+Tabs.FreeBest:AddButton({
+    Title = "Pulse Hub",
+    Description = "Load Pulse Hub script (Luarmor protected)",
+    Callback = function()
+        Fluent:Notify({
+            Title = "MM2 KING Loader",
+            Content = "Executing: Pulse Hub",
+            Duration = 3
+        })
+        task.spawn(function()
+            loadstring(game:HttpGet("https://api.luarmor.net/files/v4/loaders/5857a6cfae3b902eb3c2dff7cdbf173b.lua"))()
+        end)
+    end
+})
+
+Tabs.FreeBest:AddButton({
+    Title = "Sw1nium Hub",
+    Description = "Load Sw1nium Hub script (V1.1)",
+    Callback = function()
+        Fluent:Notify({
+            Title = "MM2 KING Loader",
+            Content = "Executing: Sw1nium Hub",
+            Duration = 3
+        })
+        task.spawn(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/musha9melnykmuhail-bot/Sw1nium-/refs/heads/main/V1.1"))()
         end)
     end
 })
